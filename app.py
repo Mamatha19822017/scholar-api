@@ -1,42 +1,46 @@
+```python
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from scholarly import scholarly
 
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/')
+def home():
+    return "API Running Successfully"
+
+@app.route('/fetch', methods=['GET'])
+def fetch_test():
+    return jsonify({
+        "status": "success",
+        "message": "Fetch API Working"
+    })
+
 @app.route('/fetch', methods=['POST'])
 def fetch_publications():
 
-    data = request.json
+    data = request.get_json()
 
-    faculty_name = data['faculty']
-    scholar_link = data['scholarLink']
+    faculty = data.get('faculty', '')
+    scholar_link = data.get('scholarLink', '')
 
-    author_id = scholar_link.split("user=")[1].split("&")[0]
+    sample_data = [
+        {
+            "title": "Sample Publication 1",
+            "year": "2025",
+            "citations": 15,
+            "journal": "IEEE Access"
+        },
+        {
+            "title": "Sample Publication 2",
+            "year": "2024",
+            "citations": 8,
+            "journal": "Springer"
+        }
+    ]
 
-    author = scholarly.search_author_id(author_id)
-    author = scholarly.fill(author)
+    return jsonify(sample_data)
 
-    publications = []
-
-    for pub in author['publications']:
-
-        try:
-
-            pub = scholarly.fill(pub)
-
-            publications.append({
-                "title": pub['bib'].get('title', ''),
-                "year": pub['bib'].get('pub_year', ''),
-                "journal": pub['bib'].get('venue', ''),
-                "citations": pub.get('num_citations', 0)
-            })
-
-        except:
-            pass
-
-    return jsonify(publications)
-
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```
