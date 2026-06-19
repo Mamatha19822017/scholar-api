@@ -1,3 +1,4 @@
+ ```python
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -9,10 +10,10 @@ def home():
     return "API Running Successfully"
 
 @app.route('/fetch', methods=['GET'])
-def fetch_test():
+def test():
     return jsonify({
         "status": "success",
-        "message": "Fetch API Working"
+        "message": "API Working"
     })
 
 @app.route('/fetch', methods=['POST'])
@@ -20,10 +21,7 @@ def fetch_publications():
 
     data = request.get_json()
 
-    faculty = data.get('faculty', '')
-    scholar_link = data.get('scholarLink', '')
-
-    sample_data = [
+    publications = [
         {
             "title": "Sample Publication 1",
             "year": "2025",
@@ -38,7 +36,8 @@ def fetch_publications():
         }
     ]
 
-    return jsonify(sample_data)
+    return jsonify(publications)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
